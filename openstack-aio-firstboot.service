@@ -1,0 +1,15 @@
+[Unit]
+Description=Run installation
+ConditionPathExists=/root/openstack-aio.pp
+Wants=network-online.target
+After=network-online.target
+After=osbuild-first-boot.service
+
+[Service]
+Type=oneshot
+ExecStart=puppet apply --modulepath /usr/share/openstack-puppet/modules /root/openstack-aio.pp
+ExecStartPost=rm /root/openstack-aio.pp
+ExecStartPost=mv /tmp/motd-openstack /etc/motd.d/openstack
+
+[Install]
+WantedBy=multi-user.target
